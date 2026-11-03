@@ -1,0 +1,408 @@
+{
+  "description": "Ground-Truth Evaluation Dataset for Government Scheme Eligibility, Recommendation Ranking, and AI Profile Extraction",
+  "version": "1.0.0",
+  "created_at": "2026-09-17",
+  "test_cases": [
+    {
+      "id": "TC-01",
+      "description": "Eligible SC Student for Post Matric Scholarship in Punjab",
+      "scheme_slug": "post-matric-scholarship-sc",
+      "profile": {
+        "age": 21,
+        "gender": "male",
+        "state": "Punjab",
+        "annual_income": 200000,
+        "occupation": "student",
+        "education": "undergraduate",
+        "category": "SC",
+        "is_student": true,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "I'm a 21 years old SC student living in Punjab studying BTech with family income of 2 lakh.",
+      "expected_status": "ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-02",
+      "description": "Ineligible due to Income Exceeding Max Limit for Post Matric Scholarship SC",
+      "scheme_slug": "post-matric-scholarship-sc",
+      "profile": {
+        "age": 21,
+        "gender": "male",
+        "state": "Punjab",
+        "annual_income": 350000,
+        "occupation": "student",
+        "education": "undergraduate",
+        "category": "SC",
+        "is_student": true,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "I am 21, SC student in Punjab, annual family income is 3.5 lakh.",
+      "expected_status": "NOT ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-03",
+      "description": "Ineligible due to Category Mismatch (General category for SC scholarship)",
+      "scheme_slug": "post-matric-scholarship-sc",
+      "profile": {
+        "age": 21,
+        "gender": "male",
+        "state": "Punjab",
+        "annual_income": 150000,
+        "occupation": "student",
+        "education": "undergraduate",
+        "category": "General",
+        "is_student": true,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "I am a 21 year old General category student in Punjab with income 1.5 lakh.",
+      "expected_status": "NOT ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-04",
+      "description": "Insufficient Information due to Missing Income for Post Matric SC Scholarship",
+      "scheme_slug": "post-matric-scholarship-sc",
+      "profile": {
+        "age": 21,
+        "gender": "male",
+        "state": "Punjab",
+        "annual_income": null,
+        "occupation": "student",
+        "education": "undergraduate",
+        "category": "SC",
+        "is_student": true,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "I am a 21 year old SC student studying in Punjab. Income is not sure.",
+      "expected_status": "INSUFFICIENT INFORMATION",
+      "expected_missing_fields": ["annual_income"]
+    },
+    {
+      "id": "TC-05",
+      "description": "Eligible Farmer for PM-KISAN Scheme",
+      "scheme_slug": "pm-kisan",
+      "profile": {
+        "age": 42,
+        "gender": "male",
+        "state": "Punjab",
+        "annual_income": 200000,
+        "occupation": "farmer",
+        "education": "secondary",
+        "category": "General",
+        "is_student": false,
+        "is_farmer": true,
+        "is_disabled": false
+      },
+      "natural_language_text": "I am a 42 year old farmer from Punjab with annual family income 2 lakh.",
+      "expected_status": "ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-06",
+      "description": "Ineligible for PM-KISAN due to Non-Farmer Status",
+      "scheme_slug": "pm-kisan",
+      "profile": {
+        "age": 30,
+        "gender": "male",
+        "state": "Punjab",
+        "annual_income": 200000,
+        "occupation": "employed",
+        "education": "undergraduate",
+        "category": "General",
+        "is_student": false,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "I am a 30 year old salaried employee in Punjab with 2 lakh income.",
+      "expected_status": "NOT ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-07",
+      "description": "Eligible Girl Child for Sukanya Samriddhi Yojana (Age 5)",
+      "scheme_slug": "sukanya-samriddhi-yojana",
+      "profile": {
+        "age": 5,
+        "gender": "female",
+        "state": "Delhi",
+        "annual_income": 300000,
+        "occupation": null,
+        "education": "primary",
+        "category": "General",
+        "is_student": false,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "Girl child aged 5 years living in Delhi.",
+      "expected_status": "ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-08",
+      "description": "Ineligible for Sukanya Samriddhi Yojana due to Age Exceeding Limit (Age 15)",
+      "scheme_slug": "sukanya-samriddhi-yojana",
+      "profile": {
+        "age": 15,
+        "gender": "female",
+        "state": "Delhi",
+        "annual_income": 300000,
+        "occupation": "student",
+        "education": "secondary",
+        "category": "General",
+        "is_student": true,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "Girl student aged 15 years in Delhi.",
+      "expected_status": "NOT ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-09",
+      "description": "Eligible Citizen for Punjab Ashirwad Scheme (Punjab Resident SC/ST/BC)",
+      "scheme_slug": "punjab-ashirwad-scheme",
+      "profile": {
+        "age": 22,
+        "gender": "female",
+        "state": "Punjab",
+        "annual_income": 30000,
+        "occupation": "unemployed",
+        "education": "secondary",
+        "category": "SC",
+        "is_student": false,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "I am a 22 year old female SC resident of Punjab with income 30k.",
+      "expected_status": "ELIGIBLE",
+      "expected_missing_fields": []
+    },
+
+    {
+      "id": "TC-10",
+      "description": "Ineligible for Punjab Ashirwad Scheme due to State Mismatch (Haryana resident)",
+      "scheme_slug": "punjab-ashirwad-scheme",
+      "profile": {
+        "age": 22,
+        "gender": "female",
+        "state": "Haryana",
+        "annual_income": 120000,
+        "occupation": "unemployed",
+        "education": "secondary",
+        "category": "SC",
+        "is_student": false,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "I am 22 female SC living in Haryana with family income 1.2 lakh.",
+      "expected_status": "NOT ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-11",
+      "description": "Eligible Artisan for PM Vishwakarma Scheme",
+      "scheme_slug": "pm-vishwakarma",
+      "profile": {
+        "age": 38,
+        "gender": "male",
+        "state": "Uttar Pradesh",
+        "annual_income": 180000,
+        "occupation": "artisan",
+        "education": "primary",
+        "category": "OBC",
+        "is_student": false,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "I am 38 years old artisan in Uttar Pradesh with family income 1.8 lakh.",
+      "expected_status": "ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-12",
+      "description": "Eligible College Student for PM Vidya Lakshmi Loan Scheme",
+      "scheme_slug": "pm-vidya-lakshmi",
+      "profile": {
+        "age": 20,
+        "gender": "female",
+        "state": "Karnataka",
+        "annual_income": 300000,
+        "occupation": "student",
+        "education": "undergraduate",
+        "category": "General",
+        "is_student": true,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "20 year old female student in Karnataka pursuing degree with income 3 lakh.",
+      "expected_status": "ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-13",
+      "description": "Insufficient Information due to Missing Age for PM Vidya Lakshmi",
+      "scheme_slug": "pm-vidya-lakshmi",
+      "profile": {
+        "age": null,
+        "gender": "female",
+        "state": "Karnataka",
+        "annual_income": 300000,
+        "occupation": "student",
+        "education": "undergraduate",
+        "category": "General",
+        "is_student": true,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "Female college student in Karnataka with income 3 lakh.",
+      "expected_status": "INSUFFICIENT INFORMATION",
+      "expected_missing_fields": ["age"]
+    },
+    {
+      "id": "TC-14",
+      "description": "Eligible Citizen for Ayushman Bharat PM-JAY (Income Under 3L Ceiling)",
+      "scheme_slug": "ayushman-bharat-pmjay",
+      "profile": {
+        "age": 45,
+        "gender": "male",
+        "state": "Bihar",
+        "annual_income": 150000,
+        "occupation": "worker",
+        "education": "primary",
+        "category": "OBC",
+        "is_student": false,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "I am 45 years old worker in Bihar with family income 1.5 lakh.",
+      "expected_status": "ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-15",
+      "description": "Ineligible for Ayushman Bharat PM-JAY due to Income Exceeding 3L Ceiling",
+      "scheme_slug": "ayushman-bharat-pmjay",
+      "profile": {
+        "age": 45,
+        "gender": "male",
+        "state": "Bihar",
+        "annual_income": 500000,
+        "occupation": "employed",
+        "education": "undergraduate",
+        "category": "General",
+        "is_student": false,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "I am 45 years old employed in Bihar with annual income 5 lakh.",
+      "expected_status": "NOT ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-16",
+      "description": "Eligible Entrepreneur for PM Mudra Yojana (Age 32)",
+      "scheme_slug": "pm-mudra-yojana",
+      "profile": {
+        "age": 32,
+        "gender": "male",
+        "state": "Maharashtra",
+        "annual_income": 250000,
+        "occupation": "self_employed",
+        "education": "secondary",
+        "category": "General",
+        "is_student": false,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "32 year old self employed shop owner in Maharashtra with income 2.5 lakh.",
+      "expected_status": "ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-17",
+      "description": "Ineligible for PM Mudra Yojana due to Age Below Minimum (Age 15)",
+      "scheme_slug": "pm-mudra-yojana",
+      "profile": {
+        "age": 15,
+        "gender": "male",
+        "state": "Maharashtra",
+        "annual_income": 50000,
+        "occupation": "student",
+        "education": "secondary",
+        "category": "General",
+        "is_student": true,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "15 year old student in Maharashtra.",
+      "expected_status": "NOT ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-18",
+      "description": "Eligible Student for Haryana Post Matric Scholarship (Haryana SC Student)",
+      "scheme_slug": "haryana-post-matric-scholarship",
+      "profile": {
+        "age": 20,
+        "gender": "male",
+        "state": "Haryana",
+        "annual_income": 200000,
+        "occupation": "student",
+        "education": "undergraduate",
+        "category": "SC",
+        "is_student": true,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "20 year old SC student in Haryana with annual family income 2 lakh.",
+      "expected_status": "ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-19",
+      "description": "Ineligible for Haryana Post Matric Scholarship due to State Mismatch (Punjab student)",
+      "scheme_slug": "haryana-post-matric-scholarship",
+      "profile": {
+        "age": 20,
+        "gender": "male",
+        "state": "Punjab",
+        "annual_income": 200000,
+        "occupation": "student",
+        "education": "undergraduate",
+        "category": "SC",
+        "is_student": true,
+        "is_farmer": false,
+        "is_disabled": false
+      },
+      "natural_language_text": "20 year old SC student living in Punjab with income 2 lakh.",
+      "expected_status": "NOT ELIGIBLE",
+      "expected_missing_fields": []
+    },
+    {
+      "id": "TC-20",
+      "description": "Eligible Farmer for Gujarat Mukhyamantri Kisan Sahay Yojana",
+      "scheme_slug": "mukhyamantri-kisan-sahay-yojana",
+      "profile": {
+        "age": 50,
+        "gender": "male",
+        "state": "Gujarat",
+        "annual_income": 250000,
+        "occupation": "farmer",
+        "education": "primary",
+        "category": "OBC",
+        "is_student": false,
+        "is_farmer": true,
+        "is_disabled": false
+      },
+      "natural_language_text": "50 year old farmer from Gujarat with annual family income 2.5 lakh.",
+      "expected_status": "ELIGIBLE",
+      "expected_missing_fields": []
+    }
+  ]
+}

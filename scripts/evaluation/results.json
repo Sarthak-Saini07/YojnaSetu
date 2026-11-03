@@ -1,0 +1,219 @@
+{
+  "timestamp": "2026-09-17T14:50:26.561284",
+  "evaluation_type": "curated_ground_truth",
+  "dataset_metadata": {
+    "dataset_size": 20,
+    "eligible_cases": 10,
+    "not_eligible_cases": 8,
+    "insufficient_information_cases": 2
+  },
+  "eligibility_evaluation": {
+    "evaluation_type": "curated_ground_truth",
+    "dataset_size": 20,
+    "eligible_cases": 10,
+    "not_eligible_cases": 8,
+    "insufficient_information_cases": 2,
+    "correct_predictions": 20,
+    "accuracy": 1.0,
+    "disclaimer": "100% accuracy applies ONLY to this 20-case curated ground-truth evaluation dataset and is NOT a claim of real-world 100% accuracy across arbitrary unconstrained inputs.",
+    "macro_metrics": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "per_class_metrics": {
+      "ELIGIBLE": {
+        "tp": 10,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "NOT ELIGIBLE": {
+        "tp": 8,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "INSUFFICIENT INFORMATION": {
+        "tp": 2,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      }
+    },
+    "confusion_matrix": {
+      "ELIGIBLE": {
+        "ELIGIBLE": 10,
+        "NOT ELIGIBLE": 0,
+        "INSUFFICIENT INFORMATION": 0
+      },
+      "NOT ELIGIBLE": {
+        "ELIGIBLE": 0,
+        "NOT ELIGIBLE": 8,
+        "INSUFFICIENT INFORMATION": 0
+      },
+      "INSUFFICIENT INFORMATION": {
+        "ELIGIBLE": 0,
+        "NOT ELIGIBLE": 0,
+        "INSUFFICIENT INFORMATION": 2
+      }
+    },
+    "failures": []
+  },
+  "ai_extraction_evaluation": {
+    "provider_used": "mock",
+    "is_mock_provider": true,
+    "disclaimer": "52.22% field extraction accuracy and 80.00% end-to-end agreement are measured on the MOCK rule-based provider and do NOT represent live Google Gemini API performance.",
+    "dataset_size": 20,
+    "field_checks_total": 180,
+    "field_extraction_accuracy": 0.5222,
+    "missing_field_detection_accuracy": 1.0,
+    "eligibility_result_agreement": 0.8,
+    "failures": [
+      {
+        "id": "TC-11",
+        "text": "I am 38 years old artisan in Uttar Pradesh with family income 1.8 lakh.",
+        "gt_status": "ELIGIBLE",
+        "ai_extracted_status": "INSUFFICIENT INFORMATION",
+        "field_errors": [
+          {
+            "field": "occupation",
+            "expected": "artisan",
+            "extracted": null
+          },
+          {
+            "field": "education",
+            "expected": "primary",
+            "extracted": null
+          },
+          {
+            "field": "category",
+            "expected": "OBC",
+            "extracted": null
+          },
+          {
+            "field": "is_student",
+            "expected": false,
+            "extracted": null
+          },
+          {
+            "field": "is_farmer",
+            "expected": false,
+            "extracted": null
+          },
+          {
+            "field": "is_disabled",
+            "expected": false,
+            "extracted": null
+          }
+        ]
+      },
+      {
+        "id": "TC-16",
+        "text": "32 year old self employed shop owner in Maharashtra with income 2.5 lakh.",
+        "gt_status": "ELIGIBLE",
+        "ai_extracted_status": "NOT ELIGIBLE",
+        "field_errors": [
+          {
+            "field": "occupation",
+            "expected": "self_employed",
+            "extracted": "employed"
+          },
+          {
+            "field": "education",
+            "expected": "secondary",
+            "extracted": null
+          },
+          {
+            "field": "category",
+            "expected": "General",
+            "extracted": null
+          },
+          {
+            "field": "is_student",
+            "expected": false,
+            "extracted": null
+          },
+          {
+            "field": "is_farmer",
+            "expected": false,
+            "extracted": null
+          },
+          {
+            "field": "is_disabled",
+            "expected": false,
+            "extracted": null
+          }
+        ]
+      },
+      {
+        "id": "TC-18",
+        "text": "20 year old SC student in Haryana with annual family income 2 lakh.",
+        "gt_status": "ELIGIBLE",
+        "ai_extracted_status": "INSUFFICIENT INFORMATION",
+        "field_errors": [
+          {
+            "field": "education",
+            "expected": "undergraduate",
+            "extracted": null
+          },
+          {
+            "field": "is_farmer",
+            "expected": false,
+            "extracted": null
+          },
+          {
+            "field": "is_disabled",
+            "expected": false,
+            "extracted": null
+          }
+        ]
+      },
+      {
+        "id": "TC-20",
+        "text": "50 year old farmer from Gujarat with annual family income 2.5 lakh.",
+        "gt_status": "ELIGIBLE",
+        "ai_extracted_status": "INSUFFICIENT INFORMATION",
+        "field_errors": [
+          {
+            "field": "education",
+            "expected": "primary",
+            "extracted": null
+          },
+          {
+            "field": "category",
+            "expected": "OBC",
+            "extracted": null
+          },
+          {
+            "field": "is_student",
+            "expected": false,
+            "extracted": null
+          },
+          {
+            "field": "is_disabled",
+            "expected": false,
+            "extracted": null
+          }
+        ]
+      }
+    ]
+  },
+  "recommendation_ranking_evaluation": {
+    "unique_profiles_evaluated": 20,
+    "tier_preservation_rate": 1.0,
+    "score_monotonicity_rate": 1.0,
+    "archived_exclusion_rate": 1.0,
+    "ranking_failures": []
+  },
+  "disclaimers": {
+    "eligibility_engine": "100% accuracy applies ONLY to this 20-case curated ground-truth evaluation dataset and is NOT a claim of real-world 100% accuracy across arbitrary unconstrained inputs.",
+    "ai_extraction": "52.22% field extraction accuracy and 80.00% end-to-end agreement are measured on the MOCK rule-based provider and do NOT represent live Google Gemini API performance."
+  }
+}
