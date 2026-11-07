@@ -1,5 +1,5 @@
 from datetime import datetime, date, timezone
-from typing import Optional
+from typing import Optional, Any
 from pydantic import BaseModel, EmailStr, Field, ConfigDict, model_validator
 
 
@@ -80,6 +80,18 @@ class UserResponse(UserBase):
     updated_at: datetime
 
     model_config = ConfigDict(populate_by_name=True)
+
+
+class UserRoleUpdate(BaseModel):
+    role: str = Field(..., pattern="^(user|admin)$", description="Target role: 'user' or 'admin'")
+
+
+class UserPaginatedResponse(BaseModel):
+    items: list[UserResponse]
+    total: int
+    page: int
+    limit: int
+    total_pages: int
 
 
 class UserInDB(UserBase):

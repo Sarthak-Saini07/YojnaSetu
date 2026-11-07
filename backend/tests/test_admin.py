@@ -129,3 +129,72 @@ def test_archived_schemes_excluded_from_recommendations(admin_token):
     # Ensure archived scheme slug is not present in recommendation results
     all_slugs = [r["scheme_slug"] for r in rec_data["results"]]
     assert slug not in all_slugs
+
+
+def test_admin_user_management_and_rbac(admin_token, normal_user_token):
+    """Test full user management lifecycle by admin and RBAC restrictions."""
+    admin_headers = {"Authorization": f"Bearer {admin_token}"}
+    user_headers = {"Authorization": f"Bearer {normal_user_token}"}
+
+    # 1. Admin lists registered users
+    list_res = client.get("/api/users?page=1&limit=10", headers=admin_headers)
+    assert list_res.status_code == 200
+    list_data = list_res.json()
+    assert "items" in list_data
+    assert "total" in list_data
+    assert list_data["total"] >= 2
+
+    # 2. Normal user cannot list users (403)
+    user_list_res = client.get("/api/users", headers=user_headers)
+    assert user_list_res.status_code == 403
+
+    # 3. Admin retrieves specific user details
+    target_user = list_data["items"][0]
+    target_id = target_user["_id"]
+    detail_res = client.get(f"/api/users/{target_id}", headers=admin_headers)
+    assert detail_res.status_code == 200
+    assert detail_res.json()["email"] == target_user["email"]
+
+    # 4. Normal user cannot retrieve specific user details (403)
+    unauth_detail = client.get(f"/api/users/{target_id}", headers=user_headers)
+    assert unauth_detail.status_code == 403
+
+    # 5. Create a test citizen and verify admin can change role
+    test_user_email = f"promoted.user.{uuid.uuid4().hex[:8]}@example.com"
+    reg_res = client.post(
+        "/api/auth/register",
+        json={"email": test_user_email, "password": "Password123!", "role": "admin"},  # Malicious escalation attempt
+    )
+    assert reg_res.status_code == 201
+    created_user = reg_res.json()["user"]
+    # Verify public registration ignored role: "admin" and forced "user"
+    assert created_user["role"] == "user"
+
+    # 6. Admin promotes user to admin
+    promote_res = client.patch(
+        f"/api/users/{created_user['_id']}/role",
+        json={"role": "admin"},
+        headers=admin_headers,
+    )
+    assert promote_res.status_code == 200
+    assert promote_res.json()["role"] == "admin"
+
+    # 7. Normal user cannot change role (403)
+    user_change_role = client.patch(
+        f"/api/users/{created_user['_id']}/role",
+        json={"role": "user"},
+        headers=user_headers,
+    )
+    assert user_change_role.status_code == 403
+
+    # 8. Admin views system information
+    sys_res = client.get("/api/admin/system", headers=admin_headers)
+    assert sys_res.status_code == 200
+    sys_data = sys_res.json()
+    assert sys_data["status"] == "operational"
+    assert sys_data["stats"]["total_users"] >= 2
+
+    # 9. Normal user cannot view system information (403)
+    user_sys_res = client.get("/api/admin/system", headers=user_headers)
+    assert user_sys_res.status_code == 403
+

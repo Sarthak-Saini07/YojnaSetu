@@ -30,10 +30,12 @@ class RegisterResponse(BaseModel):
     response_model=RegisterResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Register New User Account",
-    description="Register a new citizen or admin account with email, password, and optional profile.",
+    description="Register a new citizen account with email, password, and optional profile.",
 )
 def register(user_in: UserCreate) -> RegisterResponse:
-    created_user = auth_service.register_user(user_in)
+    # Strict RBAC: Force role='user' on public registration to prevent privilege escalation
+    user_in.role = "user"
+    created_user = auth_service.register_user(user_in, force_user_role=True)
     return RegisterResponse(
         message="Registration successful",
         user=UserResponse(**created_user),

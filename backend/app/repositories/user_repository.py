@@ -164,5 +164,124 @@ class UserRepository:
                 return self._normalize_user_doc(user)
             return None
 
+    def list_users(
+        self,
+        skip: int = 0,
+        limit: int = 50,
+        search: Optional[str] = None,
+        role: Optional[str] = None,
+    ) -> List[Dict[str, Any]]:
+        """List registered users with pagination and optional search/role filters (Admin)."""
+        query: Dict[str, Any] = {}
+        if role:
+            query["role"] = role
+
+        if search and search.strip():
+            s = search.strip()
+            query["$or"] = [
+                {"email": {"$regex": s, "$options": "i"}},
+                {"name": {"$regex": s, "$options": "i"}},
+                {"full_name": {"$regex": s, "$options": "i"}},
+            ]
+
+        try:
+            cursor = self.collection.find(query).sort("created_at", -1).skip(skip).limit(limit)
+            return [self._normalize_user_doc(doc) for doc in cursor if doc]
+        except Exception:
+            results = list(self._in_memory_users.values())
+            if role:
+                results = [u for u in results if u.get("role") == role]
+            if search and search.strip():
+                st = search.strip().lower()
+                results = [
+                    u for u in results
+                    if st in u.get("email", "").lower() or st in u.get("name", "").lower()
+                ]
+            return results[skip : skip + limit]
+
+    def count_users(self, query: Optional[Dict[str, Any]] = None) -> int:
+        """Count users matching query filter."""
+        try:
+            return self.collection.count_documents(query or {})
+        except Exception:
+            items = list(self._in_memory_users.values())
+            if query:
+                role = query.get("role")
+                if role:
+                    items = [u for u in items if u.get("role") == role]
+            return len(items)
+
+    def update_user_password(self, user_id: str, new_hashed_password: str) -> bool:
+        """Update password_hash for a user."""
+        now = datetime.now(timezone.utc)
+        if not ObjectId.is_valid(user_id):
+            for u in self._in_memory_users.values():
+                if str(u.get("_id")) == str(user_id):
+                    u["password_hash"] = new_hashed_password
+                    u["updated_at"] = now
+                    return True
+            return False
+
+        try:
+            res = self.collection.update_one(
+                {"_id": ObjectId(user_id)},
+                {"$set": {"password_hash": new_hashed_password, "updated_at": now}},
+            )
+            return res.matched_count > 0
+        except Exception:
+            for u in self._in_memory_users.values():
+                if str(u.get("_id")) == str(user_id):
+                    u["password_hash"] = new_hashed_password
+                    u["updated_at"] = now
+                    return True
+            return False
+
+    def update_user_role(self, user_id: str, new_role: str) -> Optional[Dict[str, Any]]:
+        """Update role for a user (Admin only)."""
+        now = datetime.now(timezone.utc)
+        if not ObjectId.is_valid(user_id):
+            # check in-memory
+            for u in self._in_memory_users.values():
+                if str(u.get("_id")) == str(user_id):
+                    u["role"] = new_role
+                    u["updated_at"] = now
+                    return self._normalize_user_doc(u)
+            return None
+
+        try:
+            res = self.collection.update_one(
+                {"_id": ObjectId(user_id)},
+                {"$set": {"role": new_role, "updated_at": now}},
+            )
+            if res.matched_count == 0:
+                return None
+            return self.get_by_id(user_id)
+        except Exception:
+            for u in self._in_memory_users.values():
+                if str(u.get("_id")) == str(user_id):
+                    u["role"] = new_role
+                    u["updated_at"] = now
+                    return self._normalize_user_doc(u)
+            return None
+
+    def delete_user(self, user_id: str) -> bool:
+        """Delete user document (Admin only)."""
+        if not ObjectId.is_valid(user_id):
+            for k, u in list(self._in_memory_users.items()):
+                if str(u.get("_id")) == str(user_id):
+                    del self._in_memory_users[k]
+                    return True
+            return False
+
+        try:
+            res = self.collection.delete_one({"_id": ObjectId(user_id)})
+            return res.deleted_count > 0
+        except Exception:
+            for k, u in list(self._in_memory_users.items()):
+                if str(u.get("_id")) == str(user_id):
+                    del self._in_memory_users[k]
+                    return True
+            return False
+
 
 user_repository = UserRepository()
