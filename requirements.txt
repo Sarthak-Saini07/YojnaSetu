@@ -1,0 +1,2 @@
+# Fallback requirements file pointing to backend/requirements.txt
+-r backend/requirements.txt
