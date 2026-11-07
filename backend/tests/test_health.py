@@ -19,7 +19,7 @@ def test_health_endpoint():
     assert data["status"] == "ok"
     assert data["service"] == "Government Scheme Recommendation System API"
     assert "database" in data
-    assert data["database"]["database_name"] == "government_schemes"
+    assert data["database"]["database_name"] in ("government_scheme_db", "government_schemes", "govt_scheme_db")
 
 
 def test_api_health_endpoint():

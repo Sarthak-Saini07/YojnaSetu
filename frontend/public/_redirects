@@ -1,0 +1,4 @@
+# Render Static Site SPA Routing Rewrite
+# Redirect all incoming route requests to /index.html with status 200
+/*    /index.html   200
+
