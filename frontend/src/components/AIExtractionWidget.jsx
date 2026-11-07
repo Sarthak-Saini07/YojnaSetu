@@ -8,10 +8,8 @@ import {
   HelpCircle, 
   Loader2, 
   ArrowRight, 
-  RefreshCw,
-  FileText,
-  ShieldCheck,
-  Edit3
+  ShieldCheck, 
+  Edit3 
 } from 'lucide-react';
 
 const SAMPLE_PROMPTS = [
@@ -57,37 +55,37 @@ export default function AIExtractionWidget({ onProfileExtracted }) {
   };
 
   return (
-    <div className="bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-950/40 border border-indigo-500/30 rounded-3xl p-6 space-y-4 shadow-xl">
+    <div className="bg-white dark:bg-[#202923] border border-[#E3E5DC] dark:border-[#2D3A32] rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm transition-colors">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-800">
-        <div className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-xl bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-[#EAECE4] dark:border-[#2D3A32]">
+        <div className="flex items-center space-x-2.5">
+          <div className="h-8 w-8 rounded-lg bg-[#245B48]/10 dark:bg-emerald-500/10 text-[#245B48] dark:text-emerald-400 border border-[#245B48]/20 dark:border-emerald-500/20 flex items-center justify-center">
             <Bot className="h-4 w-4" />
           </div>
           <div>
-            <h3 className="font-bold text-slate-100 text-sm flex items-center gap-2">
+            <h3 className="font-semibold text-[#202C27] dark:text-[#F3F0E7] text-sm flex items-center gap-2">
               <span>AI-Assisted Natural Language Profile Extraction</span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase font-mono">
-                Experimental Layer
+              <span className="px-2 py-0.5 rounded-full text-[10px] bg-[#C49A50]/15 text-[#8E6E32] dark:text-[#D4AF37] font-medium border border-[#C49A50]/30">
+                Optional Assistant
               </span>
             </h3>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-[#556960] dark:text-[#A1B0A6]">
               Type your profile in plain English. AI extracts demographic fields into structured data for your review.
             </p>
           </div>
         </div>
 
         {/* Disclaimer Badge */}
-        <span className="text-[11px] text-slate-400 font-mono bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 flex items-center gap-1">
-          <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-          Rules Engine Makes Final Decision
+        <span className="text-[11px] text-[#556960] dark:text-[#A1B0A6] bg-[#F7F7F2] dark:bg-[#151B18] px-2.5 py-1 rounded-md border border-[#E3E5DC] dark:border-[#2D3A32] flex items-center gap-1.5 font-medium">
+          <ShieldCheck className="h-3.5 w-3.5 text-[#245B48] dark:text-emerald-400" />
+          Deterministic Rules Make Final Decision
         </span>
       </div>
 
       {/* Input Form */}
       <form onSubmit={handleExtract} className="space-y-3">
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-slate-300">
+          <label className="text-xs font-medium text-[#202C27] dark:text-[#F3F0E7]">
             Describe your demographics in your own words:
           </label>
           <textarea
@@ -95,21 +93,21 @@ export default function AIExtractionWidget({ onProfileExtracted }) {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="e.g., I'm a 21-year-old student living in Punjab with an annual family income of ₹2.5 lakh..."
-            className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-xs focus:outline-none focus:border-indigo-500 transition resize-none"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] text-xs focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition resize-none placeholder:text-[#88988E] dark:placeholder:text-[#68776D]"
           />
         </div>
 
         {/* Sample Prompt Shortcuts */}
         <div className="flex flex-wrap items-center gap-2 text-[11px]">
-          <span className="text-slate-400 font-medium">Try Sample Prompt:</span>
+          <span className="text-[#556960] dark:text-[#A1B0A6] font-medium">Try Sample:</span>
           {SAMPLE_PROMPTS.map((prompt, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => handleApplySample(prompt)}
-              className="px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 transition text-[11px] truncate max-w-[280px] cursor-pointer"
+              className="px-2.5 py-1 rounded-lg bg-[#F7F7F2] hover:bg-[#ECEEE6] dark:bg-[#151B18] dark:hover:bg-[#202923] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] transition text-[11px] truncate max-w-[280px] cursor-pointer"
             >
-              "{prompt.slice(0, 35)}..."
+              "{prompt.slice(0, 36)}..."
             </button>
           ))}
         </div>
@@ -119,7 +117,7 @@ export default function AIExtractionWidget({ onProfileExtracted }) {
           <button
             type="submit"
             disabled={loading || !text.trim()}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-semibold text-xs transition shadow-lg shadow-indigo-600/20 disabled:opacity-50 cursor-pointer flex items-center space-x-2"
+            className="px-4 py-2 rounded-xl bg-[#245B48] hover:bg-[#1B4637] dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-medium text-xs transition shadow-sm disabled:opacity-50 cursor-pointer flex items-center space-x-2"
           >
             {loading ? (
               <>
@@ -128,7 +126,7 @@ export default function AIExtractionWidget({ onProfileExtracted }) {
               </>
             ) : (
               <>
-                <Sparkles className="h-4 w-4" />
+                <Sparkles className="h-4 w-4 text-[#D4AF37]" />
                 <span>Extract Profile with AI</span>
               </>
             )}
@@ -138,32 +136,32 @@ export default function AIExtractionWidget({ onProfileExtracted }) {
 
       {/* Error Alert */}
       {error && (
-        <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center space-x-2">
-          <AlertCircle className="h-4 w-4 text-rose-400 flex-shrink-0" />
+        <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 text-rose-800 dark:text-rose-200 text-xs flex items-center space-x-2">
+          <AlertCircle className="h-4 w-4 text-rose-600 dark:text-rose-400 flex-shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
-      {/* Extracted Profile Review & Confirm Box (Requirement #11) */}
+      {/* Extracted Profile Review & Confirm Box */}
       {extractedData && (
-        <div className="p-5 rounded-2xl bg-slate-950 border border-indigo-500/30 space-y-4 animate-in fade-in">
-          <div className="flex justify-between items-center pb-2 border-b border-slate-800">
-            <h4 className="font-bold text-xs text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" /> Review Extracted Profile (Provider: {extractedData.ai_provider_used})
+        <div className="p-4 sm:p-5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] space-y-3.5 animate-in fade-in">
+          <div className="flex justify-between items-center pb-2 border-b border-[#E3E5DC] dark:border-[#2D3A32]">
+            <h4 className="font-semibold text-xs text-[#245B48] dark:text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+              <CheckCircle2 className="h-4 w-4" /> Review Extracted Profile (Provider: {extractedData.ai_provider_used})
             </h4>
-            <span className="text-[11px] font-mono text-slate-400">
+            <span className="text-[11px] text-[#556960] dark:text-[#A1B0A6]">
               Extracted {extractedData.extracted_fields_count} fields
             </span>
           </div>
 
           {/* Transparent Confidence & Unresolved Fields Summary */}
-          <p className="text-xs text-slate-300 leading-relaxed bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+          <p className="text-xs text-[#556960] dark:text-[#A1B0A6] leading-relaxed bg-white dark:bg-[#202923] p-3 rounded-lg border border-[#E3E5DC] dark:border-[#2D3A32]">
             {extractedData.confidence_notes}
           </p>
 
           {/* Extracted Fields Pills */}
           <div className="space-y-2">
-            <label className="text-[11px] font-semibold text-slate-400 block uppercase tracking-wider">
+            <label className="text-[11px] font-semibold text-[#556960] dark:text-[#A1B0A6] block uppercase tracking-wider">
               Parsed Values to be Transferred to Form:
             </label>
             <div className="flex flex-wrap gap-2 text-xs">
@@ -172,11 +170,11 @@ export default function AIExtractionWidget({ onProfileExtracted }) {
                 return (
                   <span
                     key={key}
-                    className="px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-mono text-[11px] flex items-center gap-1.5"
+                    className="px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 text-emerald-800 dark:text-emerald-300 text-[11px] flex items-center gap-1.5 font-medium"
                   >
-                    <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+                    <CheckCircle2 className="h-3 w-3 text-emerald-600 dark:text-emerald-400" />
                     <span className="capitalize">{key.replace('_', ' ')}:</span>
-                    <span className="font-bold text-white">
+                    <span className="font-semibold text-[#202C27] dark:text-white">
                       {typeof val === 'boolean' ? (val ? 'Yes' : 'No') : typeof val === 'number' && key.includes('income') ? `₹${val.toLocaleString('en-IN')}` : String(val)}
                     </span>
                   </span>
@@ -184,12 +182,12 @@ export default function AIExtractionWidget({ onProfileExtracted }) {
               })}
 
               {/* Unresolved / Missing fields badges */}
-              {extractedData.unresolved_fields.map((miss, idx) => (
+              {(extractedData.unresolved_fields || []).map((miss, idx) => (
                 <span
                   key={idx}
-                  className="px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono text-[11px] flex items-center gap-1.5"
+                  className="px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 text-amber-800 dark:text-amber-300 text-[11px] flex items-center gap-1.5 font-medium"
                 >
-                  <HelpCircle className="h-3 w-3 text-amber-400" />
+                  <HelpCircle className="h-3 w-3 text-amber-600 dark:text-amber-400" />
                   <span>Missing: {miss}</span>
                 </span>
               ))}
@@ -197,13 +195,13 @@ export default function AIExtractionWidget({ onProfileExtracted }) {
           </div>
 
           {/* Action to Apply to Form */}
-          <div className="pt-2 flex justify-end gap-3 border-t border-slate-800">
+          <div className="pt-2 flex justify-end gap-3 border-t border-[#E3E5DC] dark:border-[#2D3A32]">
             <button
               onClick={handleConfirmAndApply}
-              className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition shadow-lg shadow-emerald-600/20 cursor-pointer flex items-center space-x-2"
+              className="px-4 py-2 rounded-xl bg-[#245B48] hover:bg-[#1B4637] dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-medium text-xs transition shadow-sm cursor-pointer flex items-center space-x-2"
             >
               <Edit3 className="h-3.5 w-3.5" />
-              <span>Populate & Review Fields in Form Below</span>
+              <span>Apply to Evaluation Form Below</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </div>

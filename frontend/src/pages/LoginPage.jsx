@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { ShieldCheck, LogIn, AlertCircle, Loader2 } from 'lucide-react';
+import { ShieldCheck, LogIn, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -10,6 +10,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -26,8 +27,12 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      await login(email, password);
-      navigate(from, { replace: true });
+      const loggedUser = await login(email, password);
+      if (loggedUser?.role === 'admin' && !location.state?.from) {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate(from, { replace: true });
+      }
     } catch (err) {
       console.error('Login error:', err);
       const msg = err.response?.data?.detail || 'Invalid email address or password.';
@@ -38,23 +43,23 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[75vh] flex items-center justify-center py-12 px-4">
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl space-y-6">
+    <div className="min-h-[75vh] flex items-center justify-center py-10 px-4">
+      <div className="w-full max-w-md bg-white dark:bg-[#202923] border border-[#E3E5DC] dark:border-[#2D3A32] rounded-2xl p-6 sm:p-8 shadow-sm space-y-6 transition-colors">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="h-12 w-12 rounded-2xl bg-blue-600/20 border border-blue-500/30 text-blue-400 mx-auto flex items-center justify-center shadow-lg shadow-blue-500/10">
+          <div className="h-11 w-11 rounded-xl bg-[#245B48]/10 dark:bg-emerald-500/10 border border-[#245B48]/20 dark:border-emerald-500/20 text-[#245B48] dark:text-emerald-400 mx-auto flex items-center justify-center">
             <ShieldCheck className="h-6 w-6" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-100 tracking-tight">Welcome Back</h2>
-          <p className="text-xs text-slate-400">
-            Sign in to access your saved profile and personalized scheme recommendations.
+          <h2 className="text-2xl font-bold text-[#202C27] dark:text-[#F3F0E7] tracking-tight">Citizen Sign In</h2>
+          <p className="text-xs text-[#556960] dark:text-[#A1B0A6]">
+            Sign in to access your saved demographic profile and personalized scheme recommendations.
           </p>
         </div>
 
         {/* Error Alert */}
         {error && (
-          <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-start space-x-2 animate-in fade-in">
-            <AlertCircle className="h-4 w-4 text-rose-400 flex-shrink-0 mt-0.5" />
+          <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 text-rose-800 dark:text-rose-200 text-xs flex items-start space-x-2 animate-in fade-in">
+            <AlertCircle className="h-4 w-4 text-rose-600 dark:text-rose-400 flex-shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
@@ -62,39 +67,50 @@ export default function LoginPage() {
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-slate-300">
-              Email Address <span className="text-rose-400">*</span>
+            <label className="text-xs font-medium text-[#202C27] dark:text-[#F3F0E7]">
+              Email Address <span className="text-rose-500">*</span>
             </label>
             <input
               type="email"
               required
-              placeholder="user@example.com"
+              placeholder="citizen@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] text-sm focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition placeholder:text-[#88988E]"
             />
           </div>
 
           <div className="space-y-1.5">
             <div className="flex justify-between items-center">
-              <label className="text-xs font-semibold text-slate-300">
-                Password <span className="text-rose-400">*</span>
+              <label className="text-xs font-medium text-[#202C27] dark:text-[#F3F0E7]">
+                Password <span className="text-rose-500">*</span>
               </label>
             </div>
-            <input
-              type="password"
-              required
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-3.5 pr-10 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] text-sm focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition placeholder:text-[#88988E]"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#556960] hover:text-[#202C27] dark:text-[#A1B0A6] dark:hover:text-[#F3F0E7] p-1 rounded-lg transition cursor-pointer"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                title={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-xs uppercase tracking-wider transition shadow-lg shadow-blue-600/20 disabled:opacity-50 flex items-center justify-center space-x-2 cursor-pointer"
+            className="w-full py-2.5 rounded-xl bg-[#245B48] hover:bg-[#1B4637] dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-semibold text-xs tracking-wider transition shadow-sm disabled:opacity-50 flex items-center justify-center space-x-2 cursor-pointer mt-2"
           >
             {loading ? (
               <>
@@ -110,17 +126,20 @@ export default function LoginPage() {
           </button>
         </form>
 
+        {/* Quick Admin Credential Helper */}
+        
+
         {/* Footer Link */}
-        <div className="pt-4 border-t border-slate-800 text-center text-xs text-slate-400 space-y-2">
+        <div className="pt-4 border-t border-[#EAECE4] dark:border-[#2D3A32] text-center text-xs text-[#556960] dark:text-[#A1B0A6] space-y-2">
           <p>
             Don't have an account yet?{' '}
-            <Link to="/register" className="text-blue-400 hover:underline font-semibold">
+            <Link to="/register" className="text-[#245B48] dark:text-emerald-400 hover:underline font-semibold">
               Register here
             </Link>
           </p>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-[#88988E]">
             Or proceed directly to{' '}
-            <Link to="/recommendations" className="text-slate-300 hover:underline font-medium">
+            <Link to="/recommendations" className="text-[#202C27] dark:text-[#F3F0E7] hover:underline font-medium">
               Guest Recommendation Check
             </Link>
           </p>

@@ -10,15 +10,11 @@ import {
   Loader2, 
   HelpCircle,
   MapPin,
-  Briefcase,
-  GraduationCap,
   DollarSign,
   Award,
-  Phone,
   Calendar,
   Heart,
-  Users,
-  Check
+  Users
 } from 'lucide-react';
 
 const INDIAN_STATES = [
@@ -185,10 +181,10 @@ export default function ProfilePage() {
       };
 
       await updateProfile(payload);
-      setSuccess('Demographic profile successfully saved to MongoDB database!');
+      setSuccess('Demographic profile successfully saved to your account!');
       return true;
     } catch (err) {
-      console.error('Failed to update profile in MongoDB:', err);
+      console.error('Failed to update profile:', err);
       setError(err.response?.data?.detail || 'Failed to save profile. Please verify your inputs.');
       return false;
     } finally {
@@ -218,80 +214,80 @@ export default function ProfilePage() {
   const completionPercentage = Math.round((filledCount / coreFields.length) * 100);
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4 space-y-8">
+    <div className="max-w-4xl mx-auto py-6 sm:py-8 px-2 sm:px-4 space-y-6 sm:space-y-8">
       {/* Header */}
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="bg-white dark:bg-[#202923] border border-[#E3E5DC] dark:border-[#2D3A32] rounded-2xl p-6 sm:p-7 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-colors">
         <div className="space-y-1">
-          <div className="flex items-center space-x-2">
-            <div className="h-9 w-9 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center border border-blue-500/30">
+          <div className="flex items-center space-x-2.5">
+            <div className="h-9 w-9 rounded-xl bg-[#245B48]/10 dark:bg-emerald-500/10 text-[#245B48] dark:text-emerald-400 flex items-center justify-center border border-[#245B48]/20 dark:border-emerald-500/20">
               <User className="h-5 w-5" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-100 tracking-tight">Citizen Demographic Profile</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-[#202C27] dark:text-[#F3F0E7] tracking-tight">Citizen Demographic Profile</h1>
           </div>
-          <p className="text-xs text-slate-400">
-            Account: <span className="text-slate-200 font-semibold">{user?.email}</span> ({name || user?.email}) • Stored in <span className="text-emerald-400 font-semibold">MongoDB</span>
+          <p className="text-xs text-[#556960] dark:text-[#A1B0A6]">
+            Account: <span className="text-[#202C27] dark:text-[#F3F0E7] font-semibold">{user?.email}</span> ({name || user?.email})
           </p>
         </div>
 
         <button
           onClick={handleSaveAndRecommend}
-          className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-xs flex items-center space-x-2 transition shadow-lg shadow-blue-600/20 cursor-pointer"
+          className="px-4 py-2.5 rounded-xl bg-[#245B48] hover:bg-[#1B4637] dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-semibold text-xs flex items-center space-x-2 transition shadow-sm cursor-pointer"
         >
-          <Sparkles className="h-4 w-4" />
+          <Sparkles className="h-4 w-4 text-[#D4AF37]" />
           <span>Save & View Recommendations</span>
         </button>
       </div>
 
       {/* Profile Completion Indicator */}
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-lg space-y-3">
+      <div className="bg-white dark:bg-[#202923] border border-[#E3E5DC] dark:border-[#2D3A32] rounded-2xl p-5 shadow-sm space-y-3 transition-colors">
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center space-x-2">
-            <Award className="h-4 w-4 text-blue-400" />
-            <span className="font-semibold text-slate-200">Profile Completion Status</span>
+            <Award className="h-4 w-4 text-[#245B48] dark:text-emerald-400" />
+            <span className="font-semibold text-[#202C27] dark:text-[#F3F0E7]">Profile Completion Status</span>
           </div>
           <span className={`px-2.5 py-0.5 rounded-full font-bold text-[11px] ${
-            completionPercentage >= 80 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
-            completionPercentage >= 50 ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' :
-            'bg-slate-800 text-slate-400'
+            completionPercentage >= 80 ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800' :
+            completionPercentage >= 50 ? 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800' :
+            'bg-[#F7F7F2] dark:bg-[#151B18] text-[#556960] dark:text-[#A1B0A6] border border-[#D8DBD0] dark:border-[#2D3A32]'
           }`}>
             {completionPercentage}% Complete
           </span>
         </div>
-        <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+        <div className="w-full bg-[#F7F7F2] dark:bg-[#151B18] h-2 rounded-full overflow-hidden border border-[#D8DBD0] dark:border-[#2D3A32]">
           <div 
-            className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-500 rounded-full"
+            className="h-full bg-[#245B48] dark:bg-emerald-500 transition-all duration-500 rounded-full"
             style={{ width: `${completionPercentage}%` }}
           />
         </div>
-        <p className="text-[11px] text-slate-400">
-          Higher profile completion enables the deterministic engine to verify exact eligibility criteria without triggering <span className="text-amber-300 font-mono">INSUFFICIENT INFORMATION</span>.
+        <p className="text-[11px] text-[#556960] dark:text-[#A1B0A6]">
+          Higher profile completion enables the deterministic engine to verify exact eligibility criteria without triggering <span className="text-amber-700 dark:text-amber-400 font-medium">INSUFFICIENT INFORMATION</span>.
         </p>
       </div>
 
       {/* Missing Information Alert */}
       {missingFields.length > 0 && (
-        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs space-y-1">
-          <div className="flex items-center space-x-2 font-bold text-amber-200">
-            <HelpCircle className="h-4 w-4 text-amber-400" />
+        <div className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 text-amber-900 dark:text-amber-200 text-xs space-y-1">
+          <div className="flex items-center space-x-2 font-semibold">
+            <HelpCircle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
             <span>Missing Demographic Information ({missingFields.length})</span>
           </div>
-          <p className="text-slate-300 leading-relaxed">
-            Schemes requiring <span className="font-semibold text-amber-300">{missingFields.join(', ')}</span> will result in <span className="font-mono text-amber-400 font-semibold">INSUFFICIENT INFORMATION</span> with <span className="font-mono text-amber-400 font-semibold">match_score = null</span> until these fields are provided.
+          <p className="text-[#556960] dark:text-[#A1B0A6] leading-relaxed">
+            Schemes requiring <span className="font-semibold text-[#202C27] dark:text-[#F3F0E7]">{missingFields.join(', ')}</span> will result in <span className="text-amber-700 dark:text-amber-400 font-semibold">INSUFFICIENT INFORMATION</span> until these parameters are provided.
           </p>
         </div>
       )}
 
       {/* Success / Error Toast */}
       {success && (
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center space-x-2">
-          <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+        <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 text-emerald-800 dark:text-emerald-200 text-xs flex items-center space-x-2">
+          <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
           <span>{success}</span>
         </div>
       )}
 
       {error && (
-        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center space-x-2">
-          <AlertCircle className="h-4 w-4 text-rose-400" />
+        <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 text-rose-800 dark:text-rose-200 text-xs flex items-center space-x-2">
+          <AlertCircle className="h-4 w-4 text-rose-600 dark:text-rose-400" />
           <span>{error}</span>
         </div>
       )}
@@ -299,72 +295,72 @@ export default function ProfilePage() {
       {/* Profile Form */}
       <form onSubmit={handleSave} className="space-y-6">
         {/* Section 1: Account & Contact */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <h2 className="text-sm font-bold text-slate-100 uppercase tracking-wider text-blue-400 flex items-center gap-2">
-            <User className="h-4 w-4 text-blue-400" /> 1. Account & Identity
+        <div className="bg-white dark:bg-[#202923] border border-[#E3E5DC] dark:border-[#2D3A32] rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm transition-colors">
+          <h2 className="text-xs font-bold text-[#245B48] dark:text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+            <User className="h-4 w-4" /> 1. Account & Identity
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300">Full Name</label>
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7]">Full Name</label>
               <input
                 type="text"
                 placeholder="Ramesh Kumar"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300">Registered Email</label>
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7]">Registered Email</label>
               <input
                 type="email"
                 disabled
                 value={user?.email || ''}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/50 border border-slate-800 text-slate-400 cursor-not-allowed"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#ECEEE6] dark:bg-[#151B18]/60 border border-[#D8DBD0] dark:border-[#2D3A32] text-[#556960] dark:text-[#88988E] cursor-not-allowed"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300">Phone Number</label>
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7]">Phone Number</label>
               <input
                 type="tel"
                 placeholder="+91 98765 43210"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               />
             </div>
           </div>
         </div>
 
         {/* Section 2: Personal & Location Details */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <h2 className="text-sm font-bold text-slate-100 uppercase tracking-wider text-blue-400 flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-blue-400" /> 2. Personal & Location Demographics
+        <div className="bg-white dark:bg-[#202923] border border-[#E3E5DC] dark:border-[#2D3A32] rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm transition-colors">
+          <h2 className="text-xs font-bold text-[#245B48] dark:text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+            <MapPin className="h-4 w-4" /> 2. Personal & Location Demographics
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
             {/* Date of Birth */}
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300 flex items-center gap-1">
-                <Calendar className="h-3.5 w-3.5 text-blue-400" /> Date of Birth
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7] flex items-center gap-1">
+                <Calendar className="h-3.5 w-3.5 text-[#245B48] dark:text-emerald-400" /> Date of Birth
               </label>
               <input
                 type="date"
                 name="date_of_birth"
                 value={profile.date_of_birth}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               />
             </div>
 
             {/* Age */}
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300 flex justify-between">
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7] flex justify-between">
                 <span>Age (Years)</span>
-                {profile.date_of_birth && <span className="text-emerald-400 text-[11px]">Auto-calculated</span>}
+                {profile.date_of_birth && <span className="text-emerald-600 dark:text-emerald-400 text-[11px] font-semibold">Auto-calculated</span>}
               </label>
               <input
                 type="number"
@@ -374,18 +370,18 @@ export default function ProfilePage() {
                 placeholder="e.g. 24"
                 value={profile.age}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               />
             </div>
 
             {/* Gender */}
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300">Gender</label>
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7]">Gender</label>
               <select
                 name="gender"
                 value={profile.gender}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               >
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
@@ -396,12 +392,12 @@ export default function ProfilePage() {
 
             {/* State */}
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300">State of Residence</label>
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7]">State of Residence</label>
               <select
                 name="state"
                 value={profile.state}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               >
                 <option value="">Select State</option>
                 {INDIAN_STATES.map((s) => (
@@ -412,25 +408,25 @@ export default function ProfilePage() {
 
             {/* District */}
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300">District</label>
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7]">District</label>
               <input
                 type="text"
                 name="district"
                 placeholder="e.g. Jalandhar, Amritsar"
                 value={profile.district}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               />
             </div>
 
             {/* Social Category */}
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300">Social Category (Caste)</label>
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7]">Social Category (Caste)</label>
               <select
                 name="category"
                 value={profile.category}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               >
                 <option value="">Select Category</option>
                 {CATEGORIES.map((c) => (
@@ -442,15 +438,15 @@ export default function ProfilePage() {
         </div>
 
         {/* Section 3: Socio-Economic & Family */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <h2 className="text-sm font-bold text-slate-100 uppercase tracking-wider text-blue-400 flex items-center gap-2">
-            <DollarSign className="h-4 w-4 text-blue-400" /> 3. Economic, Family & Education
+        <div className="bg-white dark:bg-[#202923] border border-[#E3E5DC] dark:border-[#2D3A32] rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm transition-colors">
+          <h2 className="text-xs font-bold text-[#245B48] dark:text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+            <DollarSign className="h-4 w-4" /> 3. Economic, Family & Education
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
             {/* Annual Income */}
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300">Annual Family Income (₹ INR)</label>
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7]">Annual Family Income (₹ INR)</label>
               <input
                 type="number"
                 name="annual_income"
@@ -459,18 +455,18 @@ export default function ProfilePage() {
                 placeholder="e.g. 250000"
                 value={profile.annual_income}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               />
             </div>
 
             {/* Occupation */}
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300">Primary Occupation</label>
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7]">Primary Occupation</label>
               <select
                 name="occupation"
                 value={profile.occupation}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               >
                 <option value="">Select Occupation</option>
                 {OCCUPATIONS.map((occ) => (
@@ -481,12 +477,12 @@ export default function ProfilePage() {
 
             {/* Education Level */}
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300">Education Level</label>
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7]">Education Level</label>
               <select
                 name="education"
                 value={profile.education}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               >
                 <option value="">Select Education Level</option>
                 {EDUCATION_LEVELS.map((edu) => (
@@ -497,14 +493,14 @@ export default function ProfilePage() {
 
             {/* Marital Status */}
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300 flex items-center gap-1">
-                <Heart className="h-3.5 w-3.5 text-rose-400" /> Marital Status
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7] flex items-center gap-1">
+                <Heart className="h-3.5 w-3.5 text-rose-500" /> Marital Status
               </label>
               <select
                 name="marital_status"
                 value={profile.marital_status}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               >
                 <option value="">Select Marital Status</option>
                 {MARITAL_STATUSES.map((m) => (
@@ -515,8 +511,8 @@ export default function ProfilePage() {
 
             {/* Family Members */}
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300 flex items-center gap-1">
-                <Users className="h-3.5 w-3.5 text-indigo-400" /> Number of Family Members
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7] flex items-center gap-1">
+                <Users className="h-3.5 w-3.5 text-[#245B48] dark:text-emerald-400" /> Number of Family Members
               </label>
               <input
                 type="number"
@@ -526,79 +522,79 @@ export default function ProfilePage() {
                 placeholder="e.g. 4"
                 value={profile.family_members}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               />
             </div>
 
             {/* Disability Status */}
             <div className="space-y-1.5">
-              <label className="font-semibold text-slate-300">Disability Details (Optional)</label>
+              <label className="font-medium text-[#202C27] dark:text-[#F3F0E7]">Disability Details (Optional)</label>
               <input
                 type="text"
                 name="disability_status"
                 placeholder="e.g. Locomotor / Visual (≥40%)"
                 value={profile.disability_status}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 focus:outline-none focus:border-blue-500 transition"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] text-[#202C27] dark:text-[#F3F0E7] focus:outline-none focus:border-[#245B48] dark:focus:border-emerald-500 transition"
               />
             </div>
           </div>
 
           {/* Status Checkboxes */}
-          <div className="pt-3 border-t border-slate-800/80 grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <label className="flex items-center space-x-2.5 p-3 rounded-xl bg-slate-950/60 border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+          <div className="pt-3 border-t border-[#EAECE4] dark:border-[#2D3A32] grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <label className="flex items-center space-x-2.5 p-3 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] cursor-pointer hover:border-[#245B48]/30 transition">
               <input
                 type="checkbox"
                 name="is_student"
                 checked={profile.is_student}
                 onChange={handleChange}
-                className="rounded border-slate-700 text-blue-600 focus:ring-blue-500 h-4 w-4"
+                className="rounded border-[#D8DBD0] text-[#245B48] focus:ring-[#245B48] h-4 w-4"
               />
-              <span className="text-xs text-slate-200 font-medium">Currently an Active Student</span>
+              <span className="text-xs text-[#202C27] dark:text-[#F3F0E7] font-medium">Currently an Active Student</span>
             </label>
 
-            <label className="flex items-center space-x-2.5 p-3 rounded-xl bg-slate-950/60 border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+            <label className="flex items-center space-x-2.5 p-3 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] cursor-pointer hover:border-[#245B48]/30 transition">
               <input
                 type="checkbox"
                 name="is_farmer"
                 checked={profile.is_farmer}
                 onChange={handleChange}
-                className="rounded border-slate-700 text-blue-600 focus:ring-blue-500 h-4 w-4"
+                className="rounded border-[#D8DBD0] text-[#245B48] focus:ring-[#245B48] h-4 w-4"
               />
-              <span className="text-xs text-slate-200 font-medium">Practicing Farmer / Landholder</span>
+              <span className="text-xs text-[#202C27] dark:text-[#F3F0E7] font-medium">Practicing Farmer / Landholder</span>
             </label>
 
-            <label className="flex items-center space-x-2.5 p-3 rounded-xl bg-slate-950/60 border border-slate-800 cursor-pointer hover:border-slate-700 transition">
+            <label className="flex items-center space-x-2.5 p-3 rounded-xl bg-[#F7F7F2] dark:bg-[#151B18] border border-[#D8DBD0] dark:border-[#2D3A32] cursor-pointer hover:border-[#245B48]/30 transition">
               <input
                 type="checkbox"
                 name="is_disabled"
                 checked={profile.is_disabled}
                 onChange={handleChange}
-                className="rounded border-slate-700 text-blue-600 focus:ring-blue-500 h-4 w-4"
+                className="rounded border-[#D8DBD0] text-[#245B48] focus:ring-[#245B48] h-4 w-4"
               />
-              <span className="text-xs text-slate-200 font-medium">Person with Disability (PwD)</span>
+              <span className="text-xs text-[#202C27] dark:text-[#F3F0E7] font-medium">Person with Disability (PwD)</span>
             </label>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4">
+        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
           <button
             type="submit"
             disabled={loading}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs flex items-center justify-center space-x-2 transition cursor-pointer"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white dark:bg-[#202923] hover:bg-[#F0F2EB] dark:hover:bg-[#2A362E] text-[#202C27] dark:text-[#F3F0E7] border border-[#D8DBD0] dark:border-[#2D3A32] font-semibold text-xs flex items-center justify-center space-x-2 transition shadow-sm cursor-pointer"
           >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4 text-blue-400" />}
-            <span>Save to MongoDB</span>
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4 text-[#245B48] dark:text-emerald-400" />}
+            <span>Save Profile Changes</span>
           </button>
 
           <button
             type="button"
             onClick={handleSaveAndRecommend}
             disabled={loading}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-xs flex items-center justify-center space-x-2 transition shadow-lg shadow-blue-600/25 cursor-pointer"
+            className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-[#245B48] hover:bg-[#1B4637] dark:bg-emerald-600 dark:hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center space-x-2 transition shadow-sm cursor-pointer"
           >
-            <Sparkles className="h-4 w-4" />
+            <Sparkles className="h-4 w-4 text-[#D4AF37]" />
             <span>Save & View Recommendations</span>
           </button>
         </div>
