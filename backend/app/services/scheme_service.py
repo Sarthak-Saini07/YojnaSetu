@@ -130,9 +130,8 @@ class SchemeService:
         """Soft delete (archive) or delete a scheme (Admin only)."""
         existing = self.get_scheme(scheme_id_or_slug)
 
+        scheme_repository.delete_scheme(scheme_id_or_slug, hard_delete=not soft_delete)
         if soft_delete:
-            existing["status"] = "archived"
-            scheme_repository.upsert_scheme(existing)
             return {"message": f"Scheme '{existing['name']}' archived successfully"}
         else:
             return {"message": f"Scheme '{existing['name']}' deleted successfully"}

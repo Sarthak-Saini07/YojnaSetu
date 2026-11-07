@@ -179,5 +179,34 @@ class SchemeRepository:
                 items = [item for item in items if self._matches_in_memory_query(item, query)]
             return len(items)
 
+    def delete_scheme(self, scheme_id_or_slug: str, hard_delete: bool = False) -> bool:
+        """Soft delete (archive) or permanently delete a scheme document."""
+        now = datetime.now(timezone.utc)
+        filter_q = {"slug": scheme_id_or_slug}
+        if ObjectId.is_valid(scheme_id_or_slug):
+            filter_q = {"$or": [{"_id": ObjectId(scheme_id_or_slug)}, {"slug": scheme_id_or_slug}]}
+
+        try:
+            if hard_delete:
+                res = self.collection.delete_one(filter_q)
+                return res.deleted_count > 0
+            else:
+                res = self.collection.update_one(filter_q, {"$set": {"status": "archived", "updated_at": now}})
+                return res.modified_count > 0 or res.matched_count > 0
+        except Exception:
+            key_to_del = None
+            for slug, s in self._in_memory_schemes.items():
+                if slug == scheme_id_or_slug or s.get("_id") == scheme_id_or_slug:
+                    key_to_del = slug
+                    break
+            if key_to_del:
+                if hard_delete:
+                    del self._in_memory_schemes[key_to_del]
+                else:
+                    self._in_memory_schemes[key_to_del]["status"] = "archived"
+                    self._in_memory_schemes[key_to_del]["updated_at"] = now
+                return True
+            return False
+
 
 scheme_repository = SchemeRepository()

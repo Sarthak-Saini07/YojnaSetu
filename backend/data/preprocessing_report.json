@@ -1,0 +1,32 @@
+{
+  "dataset_filename": "Schemes.csv",
+  "original_record_count": 4693,
+  "successfully_processed_records": 4693,
+  "duplicate_records": 0,
+  "duplicate_records_details": [],
+  "invalid_records": 0,
+  "records_with_incomplete_eligibility": 2283,
+  "records_requiring_manual_verification": 0,
+  "records_ready_for_import": 4693,
+  "field_mapping_details": {
+    "slug": "slug (unique identifier, disambiguated if duplicate)",
+    "name": "name & scheme_name (normalized, unquoted, mojibake-free)",
+    "description": "description (cleaned text)",
+    "category": "category (normalized list: e.g. agriculture, education, social_welfare)",
+    "state": "government.level ('central' or 'state') and eligibility.states",
+    "department / ministry": "government.department & source.department",
+    "eligibility_age_min / max": "eligibility.age.min and eligibility.age.max",
+    "eligibility_income_max": "eligibility.income.max and eligibility.annual_income_max",
+    "eligibility_gender": "eligibility.gender (['female'], ['male'], or [] for all)",
+    "eligibility_caste": "eligibility.categories (['sc', 'st', ...])",
+    "eligibility_disability": "eligibility.is_disabled (True / None)",
+    "eligibility_bpl": "eligibility.bpl_required (True / None)",
+    "eligibility_residence": "eligibility.rural_urban ('rural', 'urban', 'both')",
+    "benefits": "benefits (cleaned list of benefit items)",
+    "documents_required": "documents & documents_required (cleaned list of documents)",
+    "official_url / apply_url": "application.official_url, application_url & source_url",
+    "scraped_at": "source.last_verified (ISO date: 2024-05-18)",
+    "source_type": "third_party_dataset",
+    "eligibility_verified": "false (strict requirement: unverified third-party dataset)"
+  }
+}

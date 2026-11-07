@@ -82,10 +82,9 @@ class RecommendationResponse(BaseModel):
 
 def _build_recommendation_response(res: Dict[str, Any]) -> RecommendationResponse:
     """Format recommendation engine dict into RecommendationResponse model."""
-    results_formatted = []
-    for item in res["results"]:
-        results_formatted.append({
-            "rank": item["rank"],
+    def _format_item(item: Dict[str, Any]) -> Dict[str, Any]:
+        return {
+            "rank": item.get("rank", 1),
             "scheme": SchemeResponse(**item["scheme"]),
             "scheme_id": item["scheme_id"],
             "scheme_slug": item["scheme_slug"],
@@ -98,13 +97,16 @@ def _build_recommendation_response(res: Dict[str, Any]) -> RecommendationRespons
             "matched_conditions": item["matched_conditions"],
             "failed_conditions": item["failed_conditions"],
             "missing_information": item["missing_information"],
-            "evaluation_details": [EvaluationDetail(**d) for d in item["evaluation_details"]],
-        })
+            "evaluation_details": [EvaluationDetail(**d) for d in item.get("evaluation_details", [])],
+        }
 
+    results_formatted = [_format_item(item) for item in res.get("results", [])]
+
+    grouped_raw = res.get("grouped", {})
     grouped_formatted = {
-        "eligible": [r for r in results_formatted if r["status"] == "ELIGIBLE"],
-        "insufficient_information": [r for r in results_formatted if r["status"] == "INSUFFICIENT INFORMATION"],
-        "not_eligible": [r for r in results_formatted if r["status"] == "NOT ELIGIBLE"],
+        "eligible": [_format_item(item) for item in grouped_raw.get("eligible", [])],
+        "insufficient_information": [_format_item(item) for item in grouped_raw.get("insufficient_information", [])],
+        "not_eligible": [_format_item(item) for item in grouped_raw.get("not_eligible", [])],
     }
 
     return RecommendationResponse(

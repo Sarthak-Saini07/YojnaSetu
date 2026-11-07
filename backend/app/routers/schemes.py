@@ -104,11 +104,12 @@ def update_scheme(
     response_model=DeleteResponse,
     status_code=status.HTTP_200_OK,
     summary="Delete Scheme (Admin Only)",
-    description="Soft-delete (archive) a government scheme. Requires admin authorization.",
+    description="Soft-delete (archive) or permanently delete a government scheme. Requires admin authorization.",
 )
 def delete_scheme(
     scheme_id_or_slug: str,
+    permanent: bool = Query(False, description="If true, permanently delete from DB; otherwise archive"),
     current_admin: Dict[str, Any] = Depends(get_current_admin),
 ) -> DeleteResponse:
-    res = scheme_service.delete_scheme(scheme_id_or_slug, soft_delete=True)
+    res = scheme_service.delete_scheme(scheme_id_or_slug, soft_delete=not permanent)
     return DeleteResponse(message=res["message"])

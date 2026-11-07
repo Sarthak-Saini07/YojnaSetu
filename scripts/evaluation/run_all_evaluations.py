@@ -84,7 +84,8 @@ async def main():
     # Format 3x3 Confusion Matrix ASCII Table
     print("3x3 CONFUSION MATRIX (Deterministic Eligibility Engine):")
     print("-------------------------------------------------------------------------")
-    print(f"{'Actual \\ Predicted':<25} | {'ELIGIBLE':<12} | {'NOT ELIGIBLE':<14} | {'INSUFFICIENT INFO':<18}")
+    header_title = "Actual / Predicted"
+    print(f"{header_title:<25} | {'ELIGIBLE':<12} | {'NOT ELIGIBLE':<14} | {'INSUFFICIENT INFO':<18}")
     print("-------------------------------------------------------------------------")
     cm = eligibility_res["confusion_matrix"]
     for row_cls in CLASSES:

@@ -33,6 +33,7 @@ def generate_recommendations(
     candidate_schemes: Optional[List[Dict[str, Any]]] = None,
     preferred_categories: Optional[List[str]] = None,
     limit: int = 50,
+    tier_limit: Optional[int] = 100,
 ) -> Dict[str, Any]:
     """
     Deterministic Recommendation & Multi-Tier Ranking Engine.
@@ -49,7 +50,7 @@ def generate_recommendations(
         candidate_schemes = scheme_repository.list_schemes(
             query={"status": "active"},
             skip=0,
-            limit=500,
+            limit=10000,
         )
 
     # Filter out any non-active schemes explicitly
@@ -104,27 +105,31 @@ def generate_recommendations(
     tier2_insufficient = [i for i in evaluated_items if i["status"] == "INSUFFICIENT INFORMATION"]
     tier3_ineligible = [i for i in evaluated_items if i["status"] == "NOT ELIGIBLE"]
 
-    # Tier 1 Sorting: match_score DESC, cat_relevance DESC, slug ASC
+    # Tier 1 Sorting: verified authoritative first, match_score DESC, matched_conditions count DESC, cat_relevance DESC, slug ASC
     tier1_eligible.sort(
         key=lambda x: (
+            0 if x["scheme"].get("eligibility_verified") is not False else 1,
             -(x["match_score"] or 0),
+            -len(x["matched_conditions"]),
             -x["_cat_relevance"],
             x["scheme_slug"],
         )
     )
 
-    # Tier 2 Sorting: missing_count ASC, matched_count DESC, slug ASC
+    # Tier 2 Sorting: verified authoritative first, missing_count ASC, matched_count DESC, slug ASC
     tier2_insufficient.sort(
         key=lambda x: (
+            0 if x["scheme"].get("eligibility_verified") is not False else 1,
             len(x["missing_information"]),
             -len(x["matched_conditions"]),
             x["scheme_slug"],
         )
     )
 
-    # Tier 3 Sorting: match_score DESC, failed_count ASC, slug ASC
+    # Tier 3 Sorting: verified authoritative first, match_score DESC, failed_count ASC, slug ASC
     tier3_ineligible.sort(
         key=lambda x: (
+            0 if x["scheme"].get("eligibility_verified") is not False else 1,
             -(x["match_score"] or 0),
             len(x["failed_conditions"]),
             x["scheme_slug"],
@@ -132,21 +137,24 @@ def generate_recommendations(
     )
 
     # Combine Tiers: ELIGIBLE -> INSUFFICIENT INFORMATION -> NOT ELIGIBLE
-    combined = tier1_eligible + tier2_insufficient + tier3_ineligible
+    combined = []
+    current_rank = 1
+    for tier_list in [tier1_eligible, tier2_insufficient, tier3_ineligible]:
+        for item in tier_list:
+            clean_item = item.copy()
+            clean_item.pop("_cat_relevance", None)
+            clean_item["rank"] = current_rank
+            combined.append(clean_item)
+            current_rank += 1
 
-    # Assign 1-based sequential rank
-    ranked_results = []
-    for index, item in enumerate(combined[:limit], start=1):
-        clean_item = item.copy()
-        clean_item.pop("_cat_relevance", None)
-        clean_item["rank"] = index
-        ranked_results.append(clean_item)
+    ranked_results = combined[:limit]
 
-    # Grouped results for clear client consumption
+    # For each tier, populate grouped results up to tier_limit (default 200, or all if tier_limit is None)
+    t_limit = tier_limit or 200
     grouped = {
-        "eligible": [i for i in ranked_results if i["status"] == "ELIGIBLE"],
-        "insufficient_information": [i for i in ranked_results if i["status"] == "INSUFFICIENT INFORMATION"],
-        "not_eligible": [i for i in ranked_results if i["status"] == "NOT ELIGIBLE"],
+        "eligible": [i for i in combined if i["status"] == "ELIGIBLE"][:t_limit],
+        "insufficient_information": [i for i in combined if i["status"] == "INSUFFICIENT INFORMATION"][:t_limit],
+        "not_eligible": [i for i in combined if i["status"] == "NOT ELIGIBLE"][:t_limit],
     }
 
     return {
