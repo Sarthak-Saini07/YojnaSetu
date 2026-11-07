@@ -57,17 +57,20 @@ async def lifespan(app: FastAPI):
         except Exception as seed_err:
             logger.error(f"Failed to seed schemes into MongoDB: {seed_err}")
 
-        # Secure controlled initial admin bootstrap if no admin exists
+        # Secure controlled system admin bootstrap: ensure default admin exists
         try:
-            if user_repository.count_users({"role": "admin"}) == 0:
-                logger.info(f"Bootstrapping controlled initial admin account ({settings.ADMIN_EMAIL})...")
+            admin_user = user_repository.get_by_email(settings.ADMIN_EMAIL)
+            if not admin_user:
+                logger.info(f"Bootstrapping default system admin account ({settings.ADMIN_EMAIL})...")
                 from app.services.auth_service import auth_service
                 auth_service.create_admin_account(
                     email=settings.ADMIN_EMAIL,
                     password=settings.ADMIN_PASSWORD,
                     name="System Administrator",
                 )
-                logger.info("Controlled initial admin account established successfully.")
+                logger.info("Default system admin account established successfully.")
+            else:
+                logger.info(f"Default system admin account ({settings.ADMIN_EMAIL}) verified.")
         except Exception as admin_err:
             logger.error(f"Failed to bootstrap initial admin account: {admin_err}")
 
