@@ -21,8 +21,9 @@ class HealthResponse(BaseModel):
     database: DatabaseHealth
 
 
-@router.get(
+@router.api_route(
     "/health",
+    methods=["GET", "HEAD"],
     response_model=HealthResponse,
     status_code=status.HTTP_200_OK,
     summary="Health Check Endpoint",

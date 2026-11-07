@@ -18,6 +18,19 @@ logging.basicConfig(
 logger = logging.getLogger("main")
 
 
+def _load_seed_schemes():
+    """Import seed schemes from app.data or scripts with safe fallback."""
+    try:
+        from app.data.seed_schemes import SEED_SCHEMES
+        return SEED_SCHEMES
+    except ImportError:
+        try:
+            from scripts.seed_schemes import SEED_SCHEMES
+            return SEED_SCHEMES
+        except ImportError:
+            return []
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifecycle context manager with database connection and initialization."""
@@ -35,7 +48,7 @@ async def lifespan(app: FastAPI):
         try:
             if scheme_repository.count() == 0:
                 logger.info("Schemes collection empty in MongoDB. Seeding initial verified schemes...")
-                from scripts.seed_schemes import SEED_SCHEMES
+                SEED_SCHEMES = _load_seed_schemes()
                 from app.schemas.scheme import SchemeCreate
                 for raw_scheme in SEED_SCHEMES:
                     scheme_obj = SchemeCreate(**raw_scheme)
@@ -63,7 +76,7 @@ async def lifespan(app: FastAPI):
             f"Initial MongoDB connection failed: {e}. App starting in degraded state with in-memory seed data."
         )
         try:
-            from scripts.seed_schemes import SEED_SCHEMES
+            SEED_SCHEMES = _load_seed_schemes()
             from app.schemas.scheme import SchemeCreate
             for raw_scheme in SEED_SCHEMES:
                 scheme_obj = SchemeCreate(**raw_scheme)
@@ -140,7 +153,7 @@ app.include_router(admin.router)
 app.include_router(admin.router, prefix="/api")
 
 
-@app.get("/", summary="Root Endpoint")
+@app.api_route("/", methods=["GET", "HEAD"], summary="Root Endpoint")
 def read_root():
     return {
         "message": "Welcome to Government Scheme Recommendation System API",
